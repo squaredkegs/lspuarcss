@@ -1,0 +1,344 @@
+<?php
+	include_once ("php/connection.php");
+	include_once ("php/function.php");
+	include_once ("php/querydata.php");
+	include_once ("query/profile_query.php");
+?>
+	
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Profile | <?php 		
+					if($getid==$compare_id || !isset($_GET['user'])){
+						echo $rfname ." ". $rlname ; 
+					}
+					else if(isset($_GET['user']) && $getid!=$compare_id){
+						echo $ffname." ".$flname;
+						$_SESSION['friend_user'] = $_GET['user'];
+					}
+			?></title>
+    
+    <!-- core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/prettyPhoto.css" rel="stylesheet">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/responsive.css" rel="stylesheet">
+	<link href="css/profile.css" rel="stylesheet">
+    <link href="css/corlate.css" rel="stylesheet"> 
+	<link href="css/mymain.css" rel="stylesheet">
+    <link href="css/otherprofile.css" rel="stylesheet">	
+	<!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->       
+    
+    <link rel="shortcut icon" href="image/thesis.png">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+	<!--<link rel="stylesheet" href="/resources/demos/style.css">
+	-->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="js/jquery-1.12.4.js"></script>
+	<script src="js/jquery-ui.js"></script>
+	<script type="text/javascript">
+/*	$(document).ready(function(){
+		$("#information-container").load("profile/main-section.php");
+	});
+*/
+	</script>
+
+	<?php
+	
+	include_once("scripts/profile_scripts.php");
+	
+	if(isset($_GET['user'])  && $getid!=$compare_id){		
+	include_once ("scripts/visiting_profile_scripts.php");
+	}
+	?>
+	
+	
+	<!--Style for friend confirmation-->
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#friend-main-click").on("click", function(){
+					document.getElementById("friend-main-info").style.display = 'inline';
+					document.getElementById("friend-other-info").style.display = 'none';
+					document.getElementById("friend-comment-post-container").style.display = 'none';
+					
+				});
+				
+				$("#friend-other-click").click(function(){
+					document.getElementById("friend-main-info").style.display = 'none';
+					document.getElementById("friend-other-info").style.display = 'inline';
+					document.getElementById("friend-comment-post-container").style.display = 'none';
+					});
+				$("#friend-post-click").click(function(){
+					document.getElementById("friend-main-info").style.display = 'none';
+					document.getElementById("friend-other-info").style.display = 'none';
+					document.getElementById("friend-comment-post-container").style.display = 'inline';
+					
+				});
+			});
+		</script>
+		
+		
+		<?php
+	if(isset($_GET['user']) && $getid!=$compare_id)
+	{
+	?>
+
+		
+		<?php
+		
+		if($rowstatus==0 && $rqst_row==0)
+		{
+		?>
+		<style type="text/css">
+			#add-friend-button
+			{
+				display:inline;
+			}
+		</style>					
+		<?php
+		}
+		else if ($rowstatus>0 && $crrntstat==1)
+		{
+		?>
+		<style type="text/css">
+			#cancel-button
+			{
+				display:inline;
+			}
+		</style>
+		<?php								
+		}
+		else if ($rqst_row>0 && $rqst_status==1)
+		{
+			
+		
+		?>
+		<style type="text/css">
+			#accept-friend-button
+			{
+				display:inline;
+			}
+			
+			#reject-friend-button
+			{
+				display:inline;
+			}
+		</style>
+		
+		<?php
+		}
+		else if($rqst_status==2 || $crrntstat==2)
+		{
+		?>
+			<style type="text/css">
+			#friends
+			{
+				display:inline;
+			}
+			</style>
+		<?php		
+		}
+}		
+		?>
+
+	<!--//Style for friend confirmation-->
+</head><!--/head-->
+
+<body>
+	<?php
+		include_once ("header.php");
+	?>
+
+    <section id="blog" class="container">
+
+
+        <div class="blog">
+            <div class="row">
+				<div class="col-md-12 main-distance">
+				<?php
+					if($getid==$compare_id || !isset($_GET['user']))
+					{
+				?>	
+				
+					<div class="col-md-3">
+							<!--Put jQuery on change image-->
+							<div class="col-md-11 profile-distance" style="position:relative;">
+							<?php
+									if(empty($rpicpath))
+									{
+							?>
+								<img class="media-object profilepic profile_picture" src="image/profile/profile1.png" alt="" >
+							
+							<?php
+									}	
+									else
+									{
+							?>
+							<img class="media-object profilepic profile_picture" src="php/<?php echo $rpicpath;?>" alt="" >
+								<?php
+										}
+								?>		
+							<img src="image/extra/camera.png" class="picture_edit" id="camera_icon"/>
+							
+								
+							</div>
+							<div class="col-md-12">
+								<div class="parrent pull-left">
+									<ul class="nav side-tabs nav-stacked">
+										<li class=""><a href="#" class="profile-click" name="main" id="main-click">Main Info
+										</a></li>
+										<li class=""><a href="#" class="profile-click" name="other" id="other-click">Other Information</a></li>
+										<li class=""><a href="#" id="interest-click">Interest</a></li>
+										<li class=""><a href="#" class="profile-click" id="photos-click">Photos</a></li>
+										<li class=""><a href="#" class="profile-click" id="post-click">Posts & Comments</a></li>
+											<!-- data-toggle="tab"-->	
+										<li class=""><a href="#" class="analistic-02">Friends</a></li>
+									</ul>
+								</div>
+							</div>
+					</div>
+					<div id="information-container">
+				<?php		
+				
+						//include_once ("profile/main-section.php"); 
+						///include_once ("profile/other-section.php"); 
+
+				?>
+					</div>
+				<?php 
+				
+					//include_once ("profile/interest-section.php"); 
+					
+					//include_once ("profile/photo-section.php");
+					
+					//include_once ("profile/post-section.php");
+					
+					//include_once ("profile/photos/photos-collection.php");
+					
+				?>
+				
+				<!--End of Own Profile.php-->
+				
+				<!--Visiting Other Main Menu-->
+					<?php
+					}
+					else if(isset($_GET['user']) && $getid!=$compare_id)
+					{
+						
+					?>
+					<div class="col-md-3">
+					
+							<!--Put jQuery on change image-->
+							<div class="col-md-12 profile-distance">
+							<img class="media-object profilepic" src="image/profile/profile1.png" alt="">
+	
+	
+									<button class="btn btn-info add-friend"
+									id="add-friend-button">
+										<span>
+									Add Friend
+										</span>
+									</button>
+										<button class="btn btn-info add-friend friend
+									cancel" id="cancel-button">
+										<span>
+										Awaiting Confirmation
+										</span>
+										</button>
+								<button class="btn btn-info add-friend" id="accept-friend-button">
+								Accept Friend Request
+								</button>
+								
+								<button class="btn btn-danger reject-friend" id="reject-friend-button">
+								Reject Friend Request
+								</button>
+								
+								<button class="add-friend friend current-friend" class="btn "
+								id="friends">
+									<span>
+									Already Friends
+									</span>
+								</button>
+								
+							</div>
+							
+							<div class="col-md-12">
+								<div class="parrent pull-left">
+									<ul class="nav side-tabs nav-stacked">
+										<li class=""><a href="#" id="friend-main-click">Main Information</a></li>
+										<li class=""><a href="#" id="friend-other-click">Other Information</a></li>
+										<li class=""><a href="#" id="interest-click">Interest</a></li>
+										<li class=""><a href="#" id="photos-click">Photos</a></li>
+										<li class=""><a href="#tab2" data-toggle="tab" id="friend-post-click">Posts & Comments</a></li>
+										<li class=""><a href="#tab2" data-toggle="tab" class="analistic-02">Friends</a></li>
+									</ul>
+								</div>
+							</div>
+						
+						</div>	
+						<div>
+				<?php
+						include_once ("profile/friend-main-section.php");
+						include_once ("profile/friend-other-section.php");
+						include_once ("profile/friend-post-section.php");
+					}
+				
+				?>
+						</div>
+					
+				
+         </div><!--/.blog-->
+	</div>
+    </section><!--/#blog-->
+
+		<div style="display:none;" id="change_profile_pic">
+			<!--Nasa profile.css ang class vvvvv-->
+			<form action="php/profile_pic_exec.php" method="post" class="form-group " enctype="multipart/form-data">
+				<input type="file" name="picture" style="margin-top:10px;" accept="image/*" required/>
+				<input type="submit" name="submit_picture" value="Upload" class="btn btn-info form-control" style="margin-top:10px;"/> 
+			</form>
+			<!--Hanggang Dito-->
+		</div>
+		
+		<div style="display:none;" id="input_username" title="Create Username">
+			<form name="form" action="php/register_exec.php" method="POST">
+				<label>Username<span id="show_user_result"></span></label>
+				
+				<input type="text" style="height:27px;display:block;margin-bottom:10px;"name=	"username" class="form-control" id="check_user" autocomplete="off" required>
+				<input type="submit" name="create_user" class="btn btn-info form-control">
+				<span style="margin-left:2px;font-size:10px;color:red;display:block;">This cannot be changed!</span>
+				
+			</form>
+		</div>
+		<span id="user-unfriended" title="Remove from friends"></span>
+		<span id="confirm-unfriend-button" title="Are You Sure?"></span>
+	<footer id="footer" class="midnight-blue">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    &copy; 2013 <a target="_blank" href="http://shapebootstrap.net/" title="Free Twitter Bootstrap WordPress Themes and HTML templates">ShapeBootstrap</a>. All Rights Reserved.
+                </div>
+
+            </div>
+        </div>
+    </footer><!--/#footer-->
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.prettyPhoto.js"></script>
+    <script src="js/jquery.isotope.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/wow.min.js"></script>
+</body>
+</html>

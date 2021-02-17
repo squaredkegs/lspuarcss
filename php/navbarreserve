@@ -1,0 +1,304 @@
+<?php
+include ("php/connection.php");
+include_once ("php/querydata.php");
+include_once ("php/function.php");
+?>
+
+
+<html>
+<head>
+	<link href="css/jquery.dropdown.css" rel="stylesheet">
+	<link href="css/navbar.css" rel="stylesheet">
+	
+	
+
+	<script type="text/javascript" src="js/jquery.dropdown.js"></script>
+	
+	<!--Comment
+	<script src="js/jquery-1.12.4.js"></script>
+	-->
+
+	<script type="text/javascript">
+	
+		function checkUnreadMessage(){
+			var unread = new XMLHttpRequest();
+			unread.onreadystatechange = function(){
+				if(unread.status == 200 && unread.readyState==4){
+					document.getElementById('new-messages').innerHTML = unread.responseText;
+				}
+			}
+			unread.open('GET','php/newmessages.php',true);
+			unread.send()
+		}
+		
+		function checkFriendRequest(){
+			var friend_rqst = new XMLHttpRequest();
+			friend_rqst.onreadystatechange = function(){
+				if(friend_rqst.status==200 && friend_rqst.readyState==4){
+					document.getElementById('new-frndrqst').innerHTML = friend_rqst.responseText;	
+				}
+			}
+			friend_rqst.open('GET','php/friend_request_notification.php',true);
+			friend_rqst.send()
+		}
+		setInterval(function(){checkFriendRequest()},1000);
+		setInterval(function(){checkUnreadMessage()},1000);
+		
+	$(document).ready(function(){
+		$(".friend-request").click(function(){
+			var frid = $(this).attr("id");
+			var name = $(this).attr("name");
+			var sid = "<?php echo $_SESSION['log_user'];?>";
+			var acc_btn = $(".accept" + frid);
+			var rej_btn = $(".reject" + frid);
+			var whole_name = $(".fullname" + frid);
+			var rqst = $(".friend_request" + frid);
+			var seen = 1;
+					$.ajax({
+						type: 'POST',
+						url: 'php/friend_request.php',
+						data:
+						{
+							seen: seen,
+						},
+						
+					});
+			if(name=='accept'){
+				$(this).hide();
+				$(rej_btn).hide();
+				$(whole_name).hide();
+					$.ajax({
+						type: 'POST',
+						url: 'php/friend_request.php',
+						data:
+						{
+							accept_visit: sid,
+							owner: frid,
+						},
+						cache: false,
+						success: function (data)
+						{
+							rqst.html(data);
+						}
+					});
+				
+			}
+			else{
+				$(this).hide();
+				$(acc_btn).hide();
+				$(whole_name).hide();
+					$.ajax({
+						type: 'POST',
+						url: 'php/friend_request.php',
+						data:
+						{
+							reject_visit: sid,
+							owner: frid,
+						},
+						cache:false,
+					});
+			}
+		});
+	});
+	
+	
+	$(document).ready(function(){
+		$("#notification-count").click(function(){
+			$("#unseen-notification").hide();
+			var sid = "<?php echo $_SESSION['log_user'];?>";
+				$.ajax({
+					type: 'POST',
+					url: 'php/friend_request.php',
+					data:
+					{
+						unseen_sid: sid
+					
+					},
+					cache: false,
+					
+					
+				});
+		});
+	});
+	</script>
+	<?php if(!isset($_SESSION['log_user'])){
+		?>
+	<script type="text/javascript">
+	function focusOnInput()
+	{
+		document.getElementById("username").focus();
+	}
+
+	</script>
+
+</head>
+<body onload="focusOnInput()">
+	<?php
+	}else{
+	?>
+</head>
+<body>
+<?php	
+	}
+	?>
+	
+		<div class="collapse navbar-collapse navbar-right">
+          <ul class="nav navbar-nav">
+			<?php
+		
+				if(isset($_SESSION['log_user']))
+				{
+			
+			?>
+					<li>
+					<li><a href="index.php">Home</a></li>
+					<li><a href="profile.php">Profile</a></li>
+					<!--<li><a href="services.html">Friends</a></li>
+					<li><a href="portfolio.html">Portfolio</a></li>-->
+					<li class="dropdown">
+					   <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="image/TA.png" title="Thesis Archive" alt="logo" width="28" height="28" border="0"><i class="fa fa-angle-down"></i></a>
+						 <ul class="dropdown-menu">
+						   <li><a href="blog-item.html">Sta. Cruz</a></li>
+						   <li><a href="pricing.html">San Pablo</a></li>
+						   <li><a href="404.html">Siniloan</a></li>
+						   <li><a href="shortcodes.html">Los Baños</a></li>
+						  </ul>
+					</li>
+					<li><a href="messages.php" class="notification-image"><img src="image/Sms2.png" title="Messages" alt="logo" width="32" height="32" border="0"></a>
+					<span id="new-messages" class=""></span>
+					
+					</li>
+					<li>
+					<a href="#" data-jq-dropdown="#friend_request" class="notification-image" id="notification-count"><img src="image/Notif.PNG" title="Notifications" alt="logo" width="28" height="28" border="0"></a>
+					
+						<?php
+							/*if($rqst_count>0)
+							{
+								$unseen = $db -> prepare ("SELECT fname, stud_id, lname FROM stud_bas 
+								RIGHT JOIN frnd_rqst
+								ON frnd_rqst.frst_user = stud_bas.stud_id
+								WHERE frnd_rqst.scnd_user = :my_id AND frnd_rqst.status = '1' AND frnd_rqst.seen=0");
+								$unseen -> bindParam (":my_id", $getid);
+								$unseen -> execute();
+								$real_count = $unseen -> rowCount();
+
+						
+								if($real_count>0){
+								*/
+							
+						?>
+							<span id="new-frndrqst">
+							</span>
+						<?php
+								//}
+							//}
+						?>
+					</li>
+					<li><a href='php/log_out.php'><img src="image/LG1.PNG" title="Log-out" alt="logo" width="28" height="28" border="0"></a></li>
+					<span id="friend_request" class="jq-dropdown jq-dropdown-tip">
+						<?php
+							$query = $db -> prepare ("SELECT fname, stud_id, lname FROM stud_bas 
+								RIGHT JOIN frnd_rqst
+								ON frnd_rqst.frst_user = stud_bas.stud_id
+								WHERE frnd_rqst.scnd_user = :my_id AND frnd_rqst.status = '1'");
+								$query -> bindParam (":my_id", $getid);
+								$query -> execute();
+
+							$rqst_count = $query -> rowCount();
+
+							if($rqst_count>0)
+							{
+						?>
+						<ul class="jq-dropdown-menu">
+							<?php
+							
+							while($row = $query -> fetch(PDO::FETCH_ASSOC))
+							{
+								$friend_fname = $row['fname'];
+								$friend_lname = $row['lname'];
+								$friend_id = $row['stud_id'];
+								$full_name = $friend_fname. " ". $friend_lname;
+						
+							?>
+								<!--<input type="hidden" value="<?php echo $full_name;?>" class="friendname<?php echo $friend_id;?>">-->
+							
+								<a href="profile.php?user=<?php echo $friend_id; ?>
+								"style="margin:20px 15px 0px; 15px;">
+						
+						<div class="friend_request<?php echo $friend_id;?>">			
+							<span class="fullname<?php echo $friend_id;?>">
+								<?php
+								$fullname = limit_length($full_name,22);
+								?>
+							</span>
+							
+								</a>
+							<li style="margin:10px 10px 0 10px;">
+								<div class='top'>
+									<div style="display: table-row;">
+										<div style="display: table-cell;">
+										
+										<button id="<?php echo $friend_id;?>" style="margin-right:10px;margin-left:10px;"class="btn btn-info friend-request accept<?php echo $friend_id;?>" name="accept">Accept
+										</button>
+										<button id="<?php echo $friend_id; ?>" class="btn btn-danger friend-request reject<?php echo $friend_id;?>">Reject</button>
+										</div>				
+									</div>
+								</div>
+							</div>
+							</li>
+							<?php
+							}
+							
+							?>
+						</ul>
+							<?php
+							}
+							else
+							{
+							?>
+						<ul class="jq-dropdown-display">
+						</ul>
+							<?php
+							}
+							?>
+					</span>
+				<?php
+				
+				}
+					else
+					{
+				?>
+						
+						<li>
+						<form action="php/login_exec.php" method="POST" style="display:block;">
+						
+							<input type="text" placeholder="Username/Email" name="username" style="display:block;" id="username">
+							
+						</li>
+						<li>
+						
+							<input type="password" placeholder="Password" name="password" style="display:block;">
+							<a href="signup.php" style="color:white;
+							margin-left:10px;margin-top:5px;margin-bottom:-15px;font-size:10px;">Register?</a>
+
+						</li>
+						<li>
+							<input type="submit" name="login" value="Log-In" class="btn btn-info form-inline" style="display:block;">
+							
+						</li>
+					</form>
+						
+				<?php
+					
+					}
+				
+
+				?>	
+				<li></li>
+				<?php 
+				
+				?>
+			</ul>
+   </div>
+</body>
+</html>
