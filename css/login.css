@@ -1,0 +1,58 @@
+input[type=submit]:hover
+{
+	color:white;
+	border-color:black;
+
+}
+
+input[type="text"].sign,
+input[type="password"].sign,
+input[type="email"].sign,
+{
+	border-style:solid;
+	border-width:1px;
+	border-color:black;
+}
+
+.logform
+{
+	margin-bottom:20px;
+}
+
+.maintitle
+{
+	margin-top:20px;
+}
+
+.submitlog
+{
+	margin-top:5px;
+	margin-bottom:4px;
+	background-color:#006400;
+	border-color:#484848;
+	color:white;
+}
+
+.forgotinfo
+{
+	margin-left:20px;
+	font-size:12px;
+	text-decoration:none;
+	color:black;
+}
+
+.forgotmain
+{
+	margin-bottom:15px;
+	color:black;
+}
+
+.signuperr
+{
+	background-color:grey;
+}
+#signup
+{
+	
+	
+}

@@ -1,0 +1,79 @@
+
+.add-friend
+{
+	margin:10px 10px -10px 10px;
+	width:180px;
+	border-radius: 5px;	
+}
+
+
+.reject-friend
+{
+	margin:20px 10px -10px 10px;
+	width:180px;
+	border-radius: 5px;	
+}
+
+.friend
+{
+	/*cursor:default;
+	*/	color:black;
+	background-color:white;
+	border-color:none;
+	width:180px;
+	height:45px;
+	border-radius: 5px;	
+}
+
+
+button.cancel:hover span
+{
+	display:none;
+}
+
+button.cancel:hover:after
+{
+	content: 'Cancel';
+}
+
+button.current-friend:hover span
+{
+	display:none;
+}
+
+button.current-friend:hover:after
+{
+	content: 'Unfriend';
+	background-color:red;
+}
+
+button.current-friend:hover
+{
+	background-color:red;
+	color:white;
+}
+
+#cancel-button
+{
+	display:none;
+}
+
+#add-friend-button
+{
+	display:none;
+}
+
+#accept-friend-button
+{
+	display:none;
+}
+
+#reject-friend-button
+{
+	display:none;
+}
+
+#friends
+{
+	display:none;
+}
