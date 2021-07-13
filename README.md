@@ -1,4 +1,4 @@
 # lspuarcss
-Undergrad Thesis
+Project
 
-A site similar where students help each other on their work
+Semi-social media website
